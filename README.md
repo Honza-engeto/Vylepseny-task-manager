@@ -1,3 +1,3 @@
 # Vylepseny-task-manager
 
-just messing up aroud
+zmena v branchi
