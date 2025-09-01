@@ -1,69 +1,35 @@
-ukoly = []
+import mysql.connector
 
-def hlavni_menu():
-    while True:
-        print("\nSpravce ukolu")
-        print("1) Pridat ukol")
-        print("2) Zobrazit vsechny ukoly")
-        print("3) Odstranit ukol")
-        print("4) Konec programu")
-        volba = input("Vyberte moznost (1-4): ")
+try:
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="Pluton11",
+        database="sys"
+    )
+    print("Pripojeni probehlo uspesne.")
+except mysql.connector.Error as err:
+    print(f"Chyba pri pripojeni: {err}")
 
-        if volba == "1":
-            pridat_ukol()
-        elif volba == "2":
-            zobrazit_ukoly()
-        elif volba == "3":
-            odstranit_ukol()
-        elif volba == "4":
-            print("Konec programu")
-            break
-        else:
-            print("Neplatna volba")
+# kurzor
+cursor = conn.cursor()
 
-def pridat_ukol():
-    while True:
-        nazev = input("Zadejte nazev ukolu: ")
-        popis = input("Zadejte popis ukolu: ")
-        if not nazev or not popis:
-            print("Nazev ani popis nesmi byt prazdny")
-            continue
-        ukoly.append({"nazev": nazev, "popis": popis})
-        print(f"Ukol '{nazev}' pridan.")
-        print(ukoly)
-        return  # zpet do menu
+# vytvoreni tabulky ukoly
+try:
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS ukoly (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nazev VARCHAR(100),
+            popis VARCHAR(100),
+            stav VARCHAR(10),
+            datum_vytvoreni DATE
+        )
+    ''')
+    print("Tabulka byla vvytvorena.")
+except mysql.connector.Error as err:
+    print(f"Chyba behem vytvareni tabulky: {err}")
 
-def zobrazit_ukoly():
-    if not ukoly:
-        print("Seznam ukolu je prazdny.")
-        return
-    print("\nSeznam ukolu:")
-    for i, u in enumerate(ukoly, start=1):
-        print(f"{i}. {u['nazev']} – {u['popis']}")
-
-def odstranit_ukol():
-    if not ukoly:
-        print("Seznam je prazdny.")
-        return
-
-    # aktualni úkoly
-    zobrazit_ukoly()
-
-    volba = input("Zadejte cislo ukolu k odstraneni (Enter = zrusit): ").strip()
-    if volba == "":
-        print("Mazani zruseno.")
-        return
-    if not volba.isdigit():
-        print("Musite zadat cislo.")
-        return
-
-    idx = int(volba)
-    if not (1 <= idx <= len(ukoly)):
-        print("Ukol neexistuje.")
-        return
-
-    smazany = ukoly.pop(idx - 1)
-    print(f"Smazan ukol: {smazany['nazev']}")
-
-if __name__ == "__main__":
-    hlavni_menu()
+# uzavření pripojeni
+cursor.close()
+conn.close()
+print("Pripojeni k databazi bylo uzavreno.")
