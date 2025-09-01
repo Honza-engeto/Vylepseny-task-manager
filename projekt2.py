@@ -29,6 +29,17 @@ try:
 except mysql.connector.Error as err:
     print(f"Chyba behem vytvareni tabulky: {err}")
 
+    # vlozeni zaznamu
+data = [
+    ('Ukol1', 'Popis1', 'whatever', '2025-09-01')
+]
+try:
+    cursor.executemany("INSERT INTO ukoly (nazev, popis, stav, datum_vytvoreni) VALUES (%s, %s, %s, %s)", data)
+    conn.commit()
+    print("Zaznam vlozen")
+except mysql.connector.Error as err:
+    print(f"Chyba pri ukladani dat: {err}")
+
 # uzavření pripojeni
 cursor.close()
 conn.close()
