@@ -165,7 +165,7 @@ def odstranit_ukol(conn):
 
 
 if __name__ == "__main__":
-    conn = pripojeni_dv()
+    conn = pripojeni_dbb()
     vytvoreni_tabulky(conn)
     try:
         hlavni_menu(conn)
