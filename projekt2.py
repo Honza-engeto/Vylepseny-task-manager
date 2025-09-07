@@ -5,8 +5,8 @@ from mysql.connector import Error
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "Pluton11",
-    "database": "sys",
+    "password": "vylepseny_task_manager",
+    "database": "jan_gondas_ukoly_db",
     "autocommit": True,
 }
 
@@ -155,13 +155,25 @@ def odstranit_ukol(conn):
         return
     task_id = int(raw)
 
-    sql = f"DELETE FROM {TABLE_NAME} WHERE id=%s"
+    with conn.cursor(dictionary=True) as cur:
+        cur.execute(f"SELECT stav FROM {TABLE_NAME} WHERE id=%s", (task_id,))
+        row = cur.fetchone()
+
+    if not row:
+        print("Ukol s danym ID neexistuje.")
+        return
+
+    if row["stav"] == "Probiha":
+        print("Tento ukol prave probiha a nelze ho odstranit. Nejjdriv stav ukoly ktery chcete smazat.")
+        return
+    
     with conn.cursor() as cur:
-        cur.execute(sql, (task_id,))
+        cur.execute(f"DELETE FROM {TABLE_NAME} WHERE id=%s", (task_id,))
         if cur.rowcount == 0:
             print("Ukol s danym ID neexistuje.")
             return
     print(f"Ukol #{task_id} byl odstranen.")
+
 
 
 if __name__ == "__main__":
