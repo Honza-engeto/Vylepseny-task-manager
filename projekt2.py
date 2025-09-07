@@ -117,7 +117,7 @@ def zobrazit_ukoly(conn):
 # 6) aktualizovat_ukol() - zmena stavu ukolu podle ID
 def aktualizovat_ukol(conn):
     zobrazit_ukoly(conn)
-    raw = inpit("\nZadejte ID ukolu, ktery chcete aktualizovat (Enter=zrusit): ").strip()
+    raw = input("\nZadejte ID ukolu, ktery chcete aktualizovat (Enter=zrusit): ").strip()
     if raw == "":
         print("Aktualizace zrusena.")
         return
