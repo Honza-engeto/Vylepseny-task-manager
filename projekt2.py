@@ -164,7 +164,7 @@ def odstranit_ukol(conn):
         return
 
     if row["stav"] == "Probiha":
-        print("Tento ukol prave probiha a nelze ho odstranit. Nejjdriv stav ukoly ktery chcete smazat.")
+        print("Tento ukol prave probiha a nelze ho odstranit. Nejdriv zmente stav ukolu ktery chcete smazat.")
         return
     
     with conn.cursor() as cur:
